@@ -23,15 +23,11 @@ if(WIN32)
 endif()
 
 if(WIN32)
-    if (BUILD_64BIT)
-        set(BUILD_PYTHON OFF)
-        set(BUILD_QT OFF)
-        set(BUILD_PYQT OFF) #PyQt Fails to properly build with MinGW 64-bit
-        set(BUILD_NUMPY OFF) #Numpy also fails
-        set(BUILD_SCIPY OFF) #As does Scipy
-    else()
-        set(BUILD_PYTHON OFF)
-    endif()
+    set(BUILD_PYTHON OFF)
+    set(BUILD_QT OFF)
+    set(BUILD_PYQT OFF) #PyQt Fails to properly build with MinGW 64-bit
+    set(BUILD_NUMPY OFF) #Numpy also fails
+    set(BUILD_SCIPY OFF) #As does Scipy
 elseif(NOT APPLE)
     set(BUILD_PYTHON OFF)
     set(BUILD_QT OFF)
