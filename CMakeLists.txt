@@ -305,7 +305,7 @@ ExternalProject_Add(Uranium
 
 ExternalProject_Add(Cura
     DEPENDS Uranium CuraEngine
-    GIT_REPOSITORY https://github.com/ultimaker/Cura
+    GIT_REPOSITORY https://github.com/Kiddo3D/Cura
     GIT_TAG ${TAG_OR_BRANCH}
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNALPROJECT_INSTALL_PREFIX} -DURANIUM_SCRIPTS_DIR= -DCURA_VERSION=${CURA_VERSION}
 )
@@ -504,7 +504,7 @@ set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
 set(CPACK_NSIS_MUI_FINISHPAGE_RUN "Cura.exe")
 set(CPACK_NSIS_MENU_LINKS
     "https://ultimaker.com/en/support/software" "Cura Online Documentation"
-    "https://github.com/ultimaker/cura" "Cura Development Resources"
+    "https://github.com/Kiddo3D/cura" "Cura Development Resources"
 )
 
 include(CPack)
