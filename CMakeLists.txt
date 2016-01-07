@@ -294,7 +294,7 @@ ExternalProject_Add(CuraEngine
 
 ExternalProject_Add(Uranium
     DEPENDS PyQt Arcus
-    GIT_REPOSITORY https://github.com/ultimaker/Uranium
+    GIT_REPOSITORY https://github.com/Kiddo3D/Uranium
     GIT_TAG ${TAG_OR_BRANCH}
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNALPROJECT_INSTALL_PREFIX}
 )
