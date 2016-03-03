@@ -1,4 +1,4 @@
-project(cura-build)
+project(kiddo-build)
 
 cmake_minimum_required(VERSION 2.8.12)
 
@@ -37,16 +37,21 @@ elseif(NOT APPLE)
     set(BUILD_PYSERIAL OFF)
 endif()
 
-set(TAG_OR_BRANCH "2.1" CACHE STRING "The name of the tag or branch to build")
+set(TAG_OR_BRANCH "master" CACHE STRING "The name of the tag or branch to build")
 set(EXTRA_REPOSITORIES "" CACHE STRING "Extra repositories to install. Expected to have a CMake based build system.")
 set(EXTERNALPROJECT_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/inst)
 set(EXTERNALPROJECT_SITEPACKAGES_DIR ${EXTERNALPROJECT_INSTALL_PREFIX}/lib/python3.4/site-packages)
+
+set(KIDDO_MAJOR_VERSION "1" CACHE STRING "Kiddo Major Version")
+set(KIDDO_MINOR_VERSION "0" CACHE STRING "Kiddo Minor Version")
+set(KIDDO_PATCH_VERSION "0" CACHE STRING "Kiddo Patch Version")
+set(KIDDO_VERSION "${KIDDO_MAJOR_VERSION}.${KIDDO_MINOR_VERSION}.${KIDDO_PATCH_VERSION}")
 
 set(CURA_MAJOR_VERSION "2" CACHE STRING "Cura Major Version")
 set(CURA_MINOR_VERSION "0" CACHE STRING "Cura Minor Version")
 set(CURA_PATCH_VERSION "99" CACHE STRING "Cura Patch Version")
 set(CURA_EXTRA_VERSION "${TAG_OR_BRANCH}" CACHE STRING "Cura Extra Version Information")
-set(CURA_VERSION "${CURA_MAJOR_VERSION}.${CURA_MINOR_VERSION}.${CURA_PATCH_VERSION}-${CURA_EXTRA_VERSION}")
+set(CURA_VERSION "${CURA_MAJOR_VERSION}.${CURA_MINOR_VERSION}.${CURA_PATCH_VERSION}")
 
 if(BUILD_PYTHON)
     ExternalProject_Add(Python
@@ -306,12 +311,6 @@ ExternalProject_Add(Cura
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNALPROJECT_INSTALL_PREFIX} -DURANIUM_SCRIPTS_DIR= -DCURA_VERSION=${CURA_VERSION}
 )
 
-ExternalProject_Add(Cura-PostProcessing
-    DEPENDS Cura
-    GIT_REPOSITORY https://github.com/nallath/PostProcessingPlugin
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNALPROJECT_INSTALL_PREFIX}
-)
-
 ExternalProject_Add(cura-binary-data
     DEPENDS Cura
     GIT_REPOSITORY https://github.com/ultimaker/cura-binary-data
@@ -389,7 +388,7 @@ if(APPLE)
     set(CPACK_GENERATOR "DragNDrop")
 elseif(WIN32)
     get_filename_component(compiler_dir ${CMAKE_CXX_COMPILER} DIRECTORY)
-    configure_file(setup_win32.py.in setup_win32.py @ONLY)
+    configure_file(cura_setup_win32.py.in cura_setup_win32.py @ONLY)
 
     add_custom_target(build_exe ALL)
     add_dependencies(build_exe cura-binary-data)
@@ -408,7 +407,7 @@ elseif(WIN32)
     )
     add_custom_command(
         TARGET build_exe POST_BUILD
-        COMMAND ${PYTHON_EXECUTABLE} setup_win32.py py2exe
+        COMMAND ${PYTHON_EXECUTABLE} cura_setup_win32.py py2exe
         COMMENT "Running py2exe"
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
@@ -423,9 +422,9 @@ elseif(WIN32)
     install(DIRECTORY arduino DESTINATION "." COMPONENT "arduino")
 
     include(CPackComponent)
-    cpack_add_component(cura DISPLAY_NAME "Cura Executable and Data Files" REQUIRED)
-    cpack_add_component(vcredist DISPLAY_NAME "Install Visual Studio 2010 Redistributable")
-    cpack_add_component(arduino DISPLAY_NAME "Install Arduino Drivers")
+    cpack_add_component(cura DISPLAY_NAME "Cura" REQUIRED)
+    cpack_add_component(vcredist DISPLAY_NAME "Visual Studio 2010 Redistributable")
+    cpack_add_component(arduino DISPLAY_NAME "Arduino Drivers")
 
     set(CPACK_GENERATOR "NSIS")
 else()
@@ -436,7 +435,6 @@ else()
         "${CMAKE_BINARY_DIR}/CuraEngine-prefix/src/CuraEngine-build;CuraEngine;ALL;/usr"
         "${CMAKE_BINARY_DIR}/Uranium-prefix/src/Uranium-build;Uranium;ALL;/usr"
         "${CMAKE_BINARY_DIR}/Cura-prefix/src/Cura-build;Cura;ALL;/usr"
-        "${CMAKE_BINARY_DIR}/Cura-PostProcessing-prefix/src/Cura-PostProcessing-build;Cura-PostProcessing;ALL;/usr"
         "${CMAKE_BINARY_DIR}/cura-binary-data-prefix/src/cura-binary-data-build;cura-binary-data;ALL;/usr"
     )
 
@@ -449,19 +447,19 @@ else()
     set(CPACK_INSTALLED_DIRECTORIES "${CMAKE_BINARY_DIR}/inst/lib/python3/dist-packages/google;/usr/lib/python3/dist-packages/google")
 endif()
 
-set(CPACK_PACKAGE_NAME "Cura")
-set(CPACK_PACKAGE_VENDOR "Ultimaker")
-set(CPACK_PACKAGE_VERSION_MAJOR ${CURA_MAJOR_VERSION})
-set(CPACK_PACKAGE_VERSION_MINOR ${CURA_MINOR_VERSION})
-set(CPACK_PACKAGE_VERSION_PATCH ${CURA_PATCH_VERSION})
-set(CPACK_PACKAGE_VERSION ${CURA_VERSION})
-set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Cura 3D Printing Software")
-set(CPACK_PACKAGE_CONTACT "Arjen Hiemstra <a.hiemstra@ultimaker.com>")
+set(CPACK_PACKAGE_NAME "Kiddo")
+set(CPACK_PACKAGE_VENDOR "Kiddo")
+set(CPACK_PACKAGE_VERSION_MAJOR ${KIDDO_MAJOR_VERSION})
+set(CPACK_PACKAGE_VERSION_MINOR ${KIDDO_MINOR_VERSION})
+set(CPACK_PACKAGE_VERSION_PATCH ${KIDDO_PATCH_VERSION})
+set(CPACK_PACKAGE_VERSION ${KIDDO_VERSION})
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "Kiddo")
+set(CPACK_PACKAGE_CONTACT "Kiddo <info@kiddo3d.com>")
 if(NOT APPLE)
     set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
 endif()
-set(CPACK_PACKAGE_EXECUTABLES Cura "Cura ${CURA_MAJOR_VERSION}.${CURA_MINOR_VERSION}.${CURA_PATCH_VERSION}")
-set(CPACK_PACKAGE_INSTALL_DIRECTORY "Cura ${CURA_MAJOR_VERSION}.${CURA_MINOR_VERSION}")
+set(CPACK_PACKAGE_EXECUTABLES "Cura\\\\Cura;Cura")
+set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kiddo")
 
 set(RPM_REQUIRES
     "python3 >= 3.4.0"
@@ -497,10 +495,12 @@ set(CPACK_DEBIAN_PACKAGE_VERSION "2:${CPACK_PACKAGE_VERSION}")
 
 set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
 set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
-set(CPACK_NSIS_MUI_FINISHPAGE_RUN "Cura.exe")
 set(CPACK_NSIS_MENU_LINKS
-    "https://ultimaker.com/en/support/software" "Cura Online Documentation"
-    "https://github.com/Kiddo3D/cura" "Cura Development Resources"
+    "http://biblioteca.kiddo3d.com/" "Biblioteca"
 )
-
+set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resources/installer.ico")
+set(CPACK_NSIS_INSTALLED_ICON_NAME "Cura/Cura.exe")
+set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\resources\\\\installer-header.bmp")
+set(CPACK_MUI_WELCOMEFINISHPAGE_BITMAP "${CMAKE_SOURCE_DIR}\\\\resources\\\\installer-left.bmp")
+set(CPACK_MUI_UNWELCOMEFINISHPAGE_BITMAP "${CMAKE_SOURCE_DIR}\\\\resources\\\\installer-left.bmp")
 include(CPack)

@@ -68,31 +68,32 @@ for dirpath, dirnames, filenames in os.walk(os.path.dirname(cura.__file__)):
             includes += [module_name + "." + os.path.splitext(filename)[0]]
 
 print("Removing previous distribution package")
-shutil.rmtree("dist", True)
+shutil.rmtree("dist/Cura", True)
+os.makedirs("dist/Cura")
 
 setup(
     name="Cura",
     version="@CURA_MAJOR_VERSION@.@CURA_MINOR_VERSION@.@CURA_PATCH_VERSION@",
-    author="Ultimaker",
-    author_email="a.hiemstra@ultimaker.com",
-    url="http://software.ultimaker.com/",
+    author="Ultimaker/Kiddo",
+    author_email="info@kiddo3d.com",
+    url="http://kiddo3d.com/",
     license="GNU AFFERO GENERAL PUBLIC LICENSE (AGPL)",
     scripts=["inst/bin/cura_app.py"],
-    windows=[{"script": "inst/bin/cura_app.py", "dest_name": "Cura", "icon_resources": [(1, "@CMAKE_SOURCE_DIR@/cura.ico")]}],
+    windows=[{"script": "inst/bin/cura_app.py", "dest_name": "Cura", "icon_resources": [(1, "@CMAKE_BINARY_DIR@/Cura-prefix/src/Cura/icons/cura.ico")]}],
     #console=[{"script": "cura_app.py"}],
-    options={"py2exe": {"skip_archive": False, "includes": includes}}
+    options={"py2exe": {"skip_archive": False, "includes": includes, "dist_dir": "dist/Cura"}}
 )
 
 print("Copying Cura plugins.")
-copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/lib/uranium/plugins", "dist/plugins", ignore = shutil.ignore_patterns("OBJWriter", "MLPWriter", "MLPReader"))
-copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/lib/cura/plugins", "dist/plugins")
+copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/lib/uranium/plugins", "dist/Cura/plugins", ignore = shutil.ignore_patterns("OBJWriter", "MLPWriter", "MLPReader"))
+copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/lib/cura/plugins", "dist/Cura/plugins")
 
 print("Copying resources.")
-copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/share/uranium/resources", "dist/resources")
-copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/share/cura/resources", "dist/resources")
+copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/share/uranium/resources", "dist/Cura/resources")
+copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/share/cura/resources", "dist/Cura/resources")
 
-print("Coping Uranium QML.")
-copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/lib/python3.4/site-packages/UM/Qt/qml/UM", "dist/qml/UM")
+print("Copying Uranium QML.")
+copytree("@EXTERNALPROJECT_INSTALL_PREFIX@/lib/python3.4/site-packages/UM/Qt/qml/UM", "dist/Cura/qml/UM")
 
 qt_lib_dir = None
 qt_bin_dir = None
@@ -105,19 +106,19 @@ else:
     qt_bin_dir = os.path.dirname(PyQt5.QtCore.__file__)
 
 print("Copying Qt5 plugins")
-copytree(os.path.join(qt_lib_dir, "plugins"), "dist/PyQt5/plugins")
+copytree(os.path.join(qt_lib_dir, "plugins"), "dist/Cura/PyQt5/plugins")
 print("Copying QtQuick plugins")
-copytree(os.path.join(qt_lib_dir, "qml"), "dist/qml")
+copytree(os.path.join(qt_lib_dir, "qml"), "dist/Cura/qml")
 print("Copying Qt5 svg library")
-shutil.copy(os.path.join(qt_bin_dir, "Qt5Svg.dll"), "dist/Qt5Svg.dll")
+shutil.copy(os.path.join(qt_bin_dir, "Qt5Svg.dll"), "dist/Cura/Qt5Svg.dll")
 
 print("Copy CuraEngine")
-shutil.copy("@EXTERNALPROJECT_INSTALL_PREFIX@/bin/CuraEngine.exe", "dist/CuraEngine.exe")
-shutil.copy("@compiler_dir@/libstdc++-6.dll", "dist/libstdc++-6.dll")
-shutil.copy("@compiler_dir@/libwinpthread-1.dll", "dist/libwinpthread-1.dll")
+shutil.copy("@EXTERNALPROJECT_INSTALL_PREFIX@/bin/CuraEngine.exe", "dist/Cura/CuraEngine.exe")
+shutil.copy("@compiler_dir@/libstdc++-6.dll", "dist/Cura/libstdc++-6.dll")
+shutil.copy("@compiler_dir@/libwinpthread-1.dll", "dist/Cura/libwinpthread-1.dll")
 try:
-    shutil.copy("@compiler_dir@/libgcc_s_seh-1.dll", "dist/libgcc_s_seh-1.dll")
+    shutil.copy("@compiler_dir@/libgcc_s_seh-1.dll", "dist/Cura/libgcc_s_seh-1.dll")
 except FileNotFoundError:
-    shutil.copy("@compiler_dir@/libgcc_s_dw2-1.dll", "dist/libgcc_s_dw2-1.dll")
+    shutil.copy("@compiler_dir@/libgcc_s_dw2-1.dll", "dist/Cura/libgcc_s_dw2-1.dll")
 
-os.rename("dist/cura_app.exe", "dist/Cura.exe")
+os.rename("dist/Cura/cura_app.exe", "dist/Cura/Cura.exe")

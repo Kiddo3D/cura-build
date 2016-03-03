@@ -6,6 +6,8 @@
   !define VERSION "@CPACK_PACKAGE_VERSION@"
   !define PATCH  "@CPACK_PACKAGE_VERSION_PATCH@"
   !define INST_DIR "@CPACK_TEMPORARY_DIRECTORY@"
+  !define MUI_WELCOMEFINISHPAGE_BITMAP "@CPACK_MUI_WELCOMEFINISHPAGE_BITMAP@"
+  !define MUI_UNWELCOMEFINISHPAGE_BITMAP "@CPACK_MUI_UNWELCOMEFINISHPAGE_BITMAP@"
 
 ;--------------------------------
 ;Variables
@@ -539,20 +541,40 @@ FunctionEnd
 ; Component sections
 @CPACK_NSIS_COMPONENT_SECTIONS@
 
+!macro ASSOCIATE_EXTENSION EXT FILECLASS ICON VERB COMMAND
+	ReadRegStr $R0 HKCR ".${EXT}" ""
+	WriteRegStr HKCR ".${EXT}" "${FILECLASS}_backup" "$R0"
+ 
+	WriteRegStr HKCR ".${EXT}" "" "${FILECLASS}"
+	DeleteRegValue HKCR ".${EXT}" "Content Type"
+	WriteRegStr HKCR "${FILECLASS}\DefaultIcon" "" `${ICON}`
+	WriteRegStr HKCR "${FILECLASS}\shell" "" `${VERB}`
+	WriteRegStr HKCR "${FILECLASS}\shell\${VERB}\command" "" `${COMMAND}`
+
+	System::Call "shell32::SHChangeNotify(i,i,i,i) (0x08000000,  0x1000, 0, 0)"
+!macroend
+
+!macro UNASSOCIATE_EXTENSION EXT FILECLASS
+	ReadRegStr $R0 HKCR ".${EXT}" `${FILECLASS}_backup`
+	WriteRegStr HKCR ".${EXT}" "" "$R0"
+	DeleteRegValue HKCR ".${EXT}" `${FILECLASS}_backup`
+	DeleteRegKey HKCR `${FILECLASS}`
+!macroend
+
 Section "Open STL files with Cura"
-    WriteRegStr HKCR .stl "" "STL Model File"
-    DeleteRegValue HKCR .stl "Content Type"
-    WriteRegStr HKCR "Cura STL model file\DefaultIcon" "" "$INSTDIR\Cura.exe,0"
-    WriteRegStr HKCR "Cura STL model file\shell" "" "open"
-    WriteRegStr HKCR "Cura STL model file\shell\open\command" "" '"$INSTDIR\Cura.exe" "%1"'
+	!insertmacro ASSOCIATE_EXTENSION "stl" "cura.stl" "$INSTDIR\Cura\Cura.exe,0" "open" "$INSTDIR\Cura\Cura.exe $\"%1$\""
+SectionEnd
+
+Section "un.Open STL files with Cura"
+	!insertmacro UNASSOCIATE_EXTENSION "stl" "cura.stl"
 SectionEnd
 
 Section /o "Open OBJ files with Cura"
-    WriteRegStr HKCR .obj "" "Wavefront OBJ Model File"
-    DeleteRegValue HKCR .obj "Content Type"
-    WriteRegStr HKCR "Cura OBJ model file\DefaultIcon" "" "$INSTDIR\Cura.exe,0"
-    WriteRegStr HKCR "Cura OBJ model file\shell" "" "open"
-    WriteRegStr HKCR "Cura OBJ model file\shell\open\command" "" '"$INSTDIR\Cura.exe" "%1"'
+	!insertmacro ASSOCIATE_EXTENSION "obj" "cura.obj" "$INSTDIR\Cura\Cura.exe,0" "open" "$INSTDIR\Cura\Cura.exe $\"%1$\""
+SectionEnd
+
+Section "un.Open STL files with Cura"
+	!insertmacro UNASSOCIATE_EXTENSION "obj" "cura.obj"
 SectionEnd
 
 ;--------------------------------
@@ -587,7 +609,8 @@ SectionEnd
 ;--------------------------------
 ;Languages
 
-  !insertmacro MUI_LANGUAGE "English" ;first language is the default language
+  !insertmacro MUI_LANGUAGE "Spanish" ;first language is the default language
+  !insertmacro MUI_LANGUAGE "English"
   !insertmacro MUI_LANGUAGE "Albanian"
   !insertmacro MUI_LANGUAGE "Arabic"
   !insertmacro MUI_LANGUAGE "Basque"
@@ -631,7 +654,6 @@ SectionEnd
   !insertmacro MUI_LANGUAGE "SimpChinese"
   !insertmacro MUI_LANGUAGE "Slovak"
   !insertmacro MUI_LANGUAGE "Slovenian"
-  !insertmacro MUI_LANGUAGE "Spanish"
   !insertmacro MUI_LANGUAGE "Swedish"
   !insertmacro MUI_LANGUAGE "Thai"
   !insertmacro MUI_LANGUAGE "TradChinese"
@@ -896,7 +918,7 @@ Section "Uninstall"
     StrCmp "$MUI_TEMP" "$SMPROGRAMS" startMenuDeleteLoopDone startMenuDeleteLoop
   startMenuDeleteLoopDone:
 
-  ; If the user changed the shortcut, then untinstall may not work. This should
+  ; If the user changed the shortcut, then uninstall may not work. This should
   ; try to fix it.
   StrCpy $MUI_TEMP "$START_MENU"
   Delete "$SMPROGRAMS\$MUI_TEMP\Uninstall.lnk"

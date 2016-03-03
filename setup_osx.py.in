@@ -52,7 +52,7 @@ OPTIONS = {
         "inst/share/uranium",
         "inst/lib/python3.4/site-packages/UM/Qt/qml",
     ],
-    "iconfile": "@CMAKE_SOURCE_DIR@/cura.icns",
+    "iconfile": @CMAKE_BINARY_DIR@/Cura-prefix/src/Cura/icons/cura.icns",
     "plist": PLIST
 }
 
@@ -87,8 +87,8 @@ setup(
     name="Cura",
     app=["inst/bin/cura_app.py"],
     version="@CURA_MAJOR_VERSION@.@CURA_MINOR_VERSION@.@CURA_PATCH_VERSION@",
-    author="Ultimaker",
-    url="http://software.ultimaker.com/",
+    author="Ultimaker/Kiddo",
+    url="http://kiddo3d.com/",
     license="GNU AFFERO GENERAL PUBLIC LICENSE (AGPL)",
     options={"py2app": OPTIONS},
     setup_requires=['py2app'],

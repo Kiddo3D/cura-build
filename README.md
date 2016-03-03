@@ -1,6 +1,6 @@
-# cura-build
+# kiddo-build
 
-This repository contains build scripts used to build Cura and all depenencies from scratch.
+This repository contains build scripts used to build SmartControl, Cura and all depenencies from scratch.
 
 ## OS X
 
@@ -8,7 +8,7 @@ This repository contains build scripts used to build Cura and all depenencies fr
 2. Install latest version of Xcode.
 3. Run these commands:
 ```shell
-git clone git@github.com:Ultimaker/cura-build.git
+git clone git@github.com:Kiddo3D/kiddo-build.git
 cd cura-build
 mkdir build
 cd build
@@ -42,7 +42,7 @@ Then run CMake using the MinGW Generator. Finally, call "mingw32-make" to build 
 
 ## Ubuntu/Linux
 
-cura-build can build Ubuntu/Debian packages of Cura.
+kiddo-build can build Ubuntu/Debian packages of Kiddo.
 
 Dependencies:
 
