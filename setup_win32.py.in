@@ -127,9 +127,11 @@ print("Smart Control")
 
 includes = [
     "sip",
-	"PyQt5.QtNetwork",
+    "PyQt5.QtQuick",
+    "PyQt5.QtWidgets",
+    "PyQt5.QtNetwork",
     "serial",
-    "smartcontrol",
+    "smartcontrol"
 ]
 
 print("Removing previous distribution package")
