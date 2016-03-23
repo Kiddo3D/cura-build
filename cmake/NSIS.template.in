@@ -579,6 +579,14 @@ Section "un.Open STL files with Cura"
 	!insertmacro UNASSOCIATE_EXTENSION "obj" "cura.obj"
 SectionEnd
 
+Section "Open GCODE files with Smart Control"
+	!insertmacro ASSOCIATE_EXTENSION "gcode" "smartcontrol.gcode" "$INSTDIR\SmartControl\SmartControl.exe,0" "open" "$INSTDIR\SmartControl\SmartControl.exe $\"%1$\""
+SectionEnd
+
+Section "un.Open GCODE files with Smart Control"
+	!insertmacro UNASSOCIATE_EXTENSION "gcode" "smartcontrol.gcode"
+SectionEnd
+
 ;--------------------------------
 ; Define some macro setting for the gui
 @CPACK_NSIS_INSTALLER_MUI_ICON_CODE@

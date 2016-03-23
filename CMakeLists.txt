@@ -53,6 +53,11 @@ set(CURA_PATCH_VERSION "99" CACHE STRING "Cura Patch Version")
 set(CURA_EXTRA_VERSION "${TAG_OR_BRANCH}" CACHE STRING "Cura Extra Version Information")
 set(CURA_VERSION "${CURA_MAJOR_VERSION}.${CURA_MINOR_VERSION}.${CURA_PATCH_VERSION}")
 
+set(SMARTCONTROL_MAJOR_VERSION "1" CACHE STRING "SmartControl Major Version")
+set(SMARTCONTROL_MINOR_VERSION "0" CACHE STRING "SmartControl Minor Version")
+set(SMARTCONTROL_PATCH_VERSION "0" CACHE STRING "SmartControl Patch Version")
+set(SMARTCONTROL_VERSION "${SMARTCONTROL_MAJOR_VERSION}.${SMARTCONTROL_MINOR_VERSION}.${SMARTCONTROL_PATCH_VERSION}")
+
 if(BUILD_PYTHON)
     ExternalProject_Add(Python
         URL https://www.python.org/ftp/python/3.4.3/Python-3.4.3.tgz
@@ -318,6 +323,13 @@ ExternalProject_Add(cura-binary-data
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNALPROJECT_INSTALL_PREFIX}
 )
 
+ExternalProject_Add(SmartControl
+    DEPENDS Python PyQt
+    GIT_REPOSITORY https://github.com/Kiddo3D/SmartControl
+    GIT_TAG ${TAG_OR_BRANCH}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNALPROJECT_INSTALL_PREFIX}
+)
+
 foreach(repo ${EXTRA_REPOSITORIES})
     separate_arguments(items UNIX_COMMAND "${repo}")
     list(GET items 0 name)
@@ -388,7 +400,7 @@ if(APPLE)
     set(CPACK_GENERATOR "DragNDrop")
 elseif(WIN32)
     get_filename_component(compiler_dir ${CMAKE_CXX_COMPILER} DIRECTORY)
-    configure_file(cura_setup_win32.py.in cura_setup_win32.py @ONLY)
+    configure_file(setup_win32.py.in setup_win32.py @ONLY)
 
     add_custom_target(build_exe ALL)
     add_dependencies(build_exe cura-binary-data)
@@ -407,12 +419,13 @@ elseif(WIN32)
     )
     add_custom_command(
         TARGET build_exe POST_BUILD
-        COMMAND ${PYTHON_EXECUTABLE} cura_setup_win32.py py2exe
+        COMMAND ${PYTHON_EXECUTABLE} setup_win32.py py2exe
         COMMENT "Running py2exe"
         WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
     )
 
     install(DIRECTORY ${CMAKE_BINARY_DIR}/dist/ DESTINATION "." USE_SOURCE_PERMISSIONS COMPONENT "cura")
+    install(DIRECTORY ${CMAKE_BINARY_DIR}/dist/ DESTINATION "." USE_SOURCE_PERMISSIONS COMPONENT "smartcontrol")
     # Get the VCRedist from http://www.microsoft.com/en-us/download/details.aspx?id=26999
     if(BUILD_64BIT)
         install(FILES vcredist_x64.exe DESTINATION "." COMPONENT "vcredist")
@@ -423,6 +436,7 @@ elseif(WIN32)
 
     include(CPackComponent)
     cpack_add_component(cura DISPLAY_NAME "Cura" REQUIRED)
+    cpack_add_component(smartcontrol DISPLAY_NAME "Smart Control" REQUIRED)
     cpack_add_component(vcredist DISPLAY_NAME "Visual Studio 2010 Redistributable")
     cpack_add_component(arduino DISPLAY_NAME "Arduino Drivers")
 
@@ -458,7 +472,7 @@ set(CPACK_PACKAGE_CONTACT "Kiddo <info@kiddo3d.com>")
 if(NOT APPLE)
     set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_SOURCE_DIR}/LICENSE)
 endif()
-set(CPACK_PACKAGE_EXECUTABLES "Cura\\\\Cura;Cura")
+set(CPACK_PACKAGE_EXECUTABLES "Cura\\\\Cura;Cura" "SmartControl\\\\SmartControl;SmartControl")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "Kiddo")
 
 set(RPM_REQUIRES
@@ -495,11 +509,9 @@ set(CPACK_DEBIAN_PACKAGE_VERSION "2:${CPACK_PACKAGE_VERSION}")
 
 set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
 set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
-set(CPACK_NSIS_MENU_LINKS
-    "http://biblioteca.kiddo3d.com/" "Biblioteca"
-)
+set(CPACK_NSIS_MENU_LINKS "http://biblioteca.kiddo3d.com/" "Biblioteca")
 set(CPACK_NSIS_MUI_ICON "${CMAKE_SOURCE_DIR}/resources/installer.ico")
-set(CPACK_NSIS_INSTALLED_ICON_NAME "Cura/Cura.exe")
+set(CPACK_NSIS_INSTALLED_ICON_NAME "SmartControl/SmartControl.exe")
 set(CPACK_PACKAGE_ICON "${CMAKE_SOURCE_DIR}\\\\resources\\\\installer-header.bmp")
 set(CPACK_MUI_WELCOMEFINISHPAGE_BITMAP "${CMAKE_SOURCE_DIR}\\\\resources\\\\installer-left.bmp")
 set(CPACK_MUI_UNWELCOMEFINISHPAGE_BITMAP "${CMAKE_SOURCE_DIR}\\\\resources\\\\installer-left.bmp")
