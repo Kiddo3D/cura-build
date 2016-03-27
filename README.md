@@ -83,15 +83,15 @@ Dependencies:
 * build-essential
 * cmake
 
-To build, make sure these dependencies are installed, then clone this repository and run the following commands from your clone:
+Check that all dependencies are for Python 3.4.
+Other installed Protobuf versions may conflict with the build (for example libprotobuf-dev and libprotobuf-lite9 on Ubuntu 15.04). 
 
 ```shell
-sudo apt-get install python3 python3-dev python3-pyqt5 python3-pyqt5.qtopengl python3-pyqt5.qtquick python3-pyqt5.qtsvg python3-numpy python3-serial python3-opengl qml-module-qtquick2 qml-module-qtquick-window2 qml-module-qtquick-layouts qml-module-qtquick-dialogs qml-module-qtquick-controls
+sudo apt-get install python3 python3-dev python3-sip-dev python3-setuptools python3-pyqt5 python3-pyqt5.qtopengl python3-pyqt5.qtquick python3-pyqt5.qtsvg python3-numpy python3-scipy python3-serial python3-opengl qt5-default qt5-qmake qml-module-qtquick2 qml-module-qtquick-window2 qml-module-qtquick-layouts qml-module-qtquick-dialogs qml-module-qtquick-controls zlib1g build-essential cmake git
 git clone https://github.com/Kiddo3D/kiddo-build
-cd cura-build
+cd kiddo-build
 mkdir build
 cd build
 cmake ..
-make
 make package
 ```
