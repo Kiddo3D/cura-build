@@ -522,17 +522,19 @@ elseif(BUILD_OS_LINUX)
     set(CPACK_INSTALL_CMAKE_PROJECTS "")
 
     set(CPACK_INSTALLED_DIRECTORIES
-        "${CMAKE_BINARY_DIR}/inst/bin;/opt/cura/bin"
-        "${CMAKE_BINARY_DIR}/inst/lib;/opt/cura/lib"
-        "${CMAKE_BINARY_DIR}/inst/share;/opt/cura/share"
+        "${CMAKE_BINARY_DIR}/inst/bin;/opt/kiddo/bin"
+        "${CMAKE_BINARY_DIR}/inst/lib;/opt/kiddo/lib"
+        "${CMAKE_BINARY_DIR}/inst/share;/opt/kiddo/share"
     )
 
-    set(package_dir "_CPack_Packages/Linux/${CPACK_GENERATOR}/Cura-${CURA_VERSION}-Linux/")
+    set(package_dir "_CPack_Packages/Linux/${CPACK_GENERATOR}/Kiddo-${Kiddo_VERSION}-Linux/")
     set(CPACK_INSTALL_COMMANDS
         "${CMAKE_COMMAND} -E make_directory ${package_dir}/usr/bin"
         "${CMAKE_COMMAND} -E make_directory ${package_dir}/usr/share/applications"
-        "${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/cura ${package_dir}/usr/bin/"
-        "${CMAKE_COMMAND} -E copy ${CMAKE_SOURCE_DIR}/cura.desktop ${package_dir}/usr/share/applications/"
+        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/Cura-prefix/src/other/cura ${package_dir}/usr/bin/"
+        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/Cura-prefix/src/other/cura.desktop ${package_dir}/usr/share/applications/"
+        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/SmartControl-prefix/src/other/smartcontrol ${package_dir}/usr/bin/"
+        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/SmartControl-prefix/src/other/smartcontrol.desktop ${package_dir}/usr/share/applications/"
     )
 endif()
 
