@@ -527,14 +527,14 @@ elseif(BUILD_OS_LINUX)
         "${CMAKE_BINARY_DIR}/inst/share;/opt/kiddo/share"
     )
 
-    set(package_dir "_CPack_Packages/Linux/${CPACK_GENERATOR}/Kiddo-${Kiddo_VERSION}-Linux/")
+    set(package_dir "_CPack_Packages/Linux/${CPACK_GENERATOR}/Kiddo-${KIDDO_VERSION}-Linux/")
     set(CPACK_INSTALL_COMMANDS
         "${CMAKE_COMMAND} -E make_directory ${package_dir}/usr/bin"
         "${CMAKE_COMMAND} -E make_directory ${package_dir}/usr/share/applications"
-        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/Cura-prefix/src/other/cura ${package_dir}/usr/bin/"
-        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/Cura-prefix/src/other/cura.desktop ${package_dir}/usr/share/applications/"
-        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/SmartControl-prefix/src/other/smartcontrol ${package_dir}/usr/bin/"
-        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/SmartControl-prefix/src/other/smartcontrol.desktop ${package_dir}/usr/share/applications/"
+        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/Cura-prefix/src/Cura/other/cura ${package_dir}/usr/bin/"
+        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/Cura-prefix/src/Cura/other/cura.desktop ${package_dir}/usr/share/applications/"
+        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/SmartControl-prefix/src/SmartControl/other/smartcontrol ${package_dir}/usr/bin/"
+        "${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/SmartControl-prefix/src/SmartControl/other/smartcontrol.desktop ${package_dir}/usr/share/applications/"
     )
 endif()
 
@@ -571,8 +571,7 @@ set(DEB_DEPENDS
 string(REPLACE ";" "," DEB_DEPENDS "${DEB_DEPENDS}")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS ${DEB_DEPENDS})
 set(CPACK_DEBIAN_PACKAGE_ARCHITECTURE amd64)
-# Set the right epoch so Debian knows this is a more recent version
-set(CPACK_DEBIAN_PACKAGE_VERSION "2:${CPACK_PACKAGE_VERSION}")
+set(CPACK_DEBIAN_PACKAGE_VERSION "${CPACK_PACKAGE_VERSION}")
 
 set(CPACK_NSIS_ENABLE_UNINSTALL_BEFORE_INSTALL ON)
 set(CPACK_NSIS_EXECUTABLES_DIRECTORY ".")
