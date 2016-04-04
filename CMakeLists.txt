@@ -369,7 +369,7 @@ ExternalProject_Add(Arcus
 
 ExternalProject_Add(CuraEngine
     DEPENDS Arcus
-    GIT_REPOSITORY https://github.com/ultimaker/CuraEngine
+    GIT_REPOSITORY https://github.com/Kiddo3D/CuraEngine
     GIT_TAG origin/${TAG_OR_BRANCH}
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${EXTERNALPROJECT_INSTALL_PREFIX} -DCURA_ENGINE_VERSION=${CURA_VERSION} -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
 )
